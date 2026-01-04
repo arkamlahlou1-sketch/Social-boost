@@ -1,0 +1,15 @@
+{
+  "name": "social-boost-app",
+  "version": "1.0.0",
+  "description": "موقع لزيادة المتابعين",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "puppeteer": "^21.0.0",
+    "axios": "^1.4.0"
+  }
+}
