@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المهام | كسب النقاط</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+
+    <nav class="bg-gray-800 p-4 border-b border-gray-700 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-blue-400"><i class="fas fa-rocket ml-2"></i>SocialBoost</h1>
+            <div class="bg-gray-700 px-4 py-2 rounded-full border border-yellow-500/50">
+                <span class="text-yellow-400 font-bold" id="user-points">120</span>
+                <i class="fas fa-coins text-yellow-500 mr-2"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-10 px-4">
+        <header class="text-center mb-12">
+            <h2 class="text-3xl font-extrabold mb-2">كسب النقاط مجاناً</h2>
+            <p class="text-gray-400">تابع الحسابات التالية وقم بتأكيد المهمة لتحصل على النقاط فوراً</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 hover:border-blue-500 transition-all shadow-xl">
+                <div class="flex items-center mb-4">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-12 h-12 rounded-full bg-blue-100 p-1" alt="avatar">
+                    <div class="mr-4">
+                        <h3 class="font-bold text-lg">@Tech_Guru</h3>
+                        <p class="text-sm text-gray-400">تكنولوجيا وبرمجة</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mt-6">
+                    <span class="text-green-400 font-bold">+10 نقاط</span>
+                    <div class="space-x-reverse space-x-2">
+                        <a href="https://instagram.com/tech_guru" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition">متابعة</a>
+                        <button onclick="verifyTask(this)" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg text-sm border border-gray-600">تأكيد</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 hover:border-blue-500 transition-all shadow-xl">
+                <div class="flex items-center mb-4">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Anya" class="w-12 h-12 rounded-full bg-pink-100 p-1" alt="avatar">
+                    <div class="mr-4">
+                        <h3 class="font-bold text-lg">@Design_Master</h3>
+                        <p class="text-sm text-gray-400">تصميم جرافيك</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mt-6">
+                    <span class="text-green-400 font-bold">+8 نقاط</span>
+                    <div class="space-x-reverse space-x-2">
+                        <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition">متابعة</a>
+                        <button onclick="verifyTask(this)" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg text-sm border border-gray-600">تأكيد</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function verifyTask(btn) {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الفحص...';
+            btn.disabled = true;
+
+            // هنا نرسل الطلب للسيرفر (Node.js) الذي كتبناه سابقاً
+            // بعد النجاح:
+            setTimeout(() => {
+                btn.innerHTML = '✅ تم التحقق';
+                btn.className = "bg-green-600 text-white px-4 py-2 rounded-lg text-sm";
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
