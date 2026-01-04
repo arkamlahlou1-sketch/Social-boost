@@ -1,44 +1,72 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const puppeteer = require('puppeteer');
-const User = require('./models/User');
 const path = require('path');
+const User = require('./model/User'); // تأكد أن المجلد في GitHub اسمه model (بدون s) كما في صورتك
 
 const app = express();
+
+// إعدادات السيرفر
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// الاتصال بـ MongoDB Atlas (استخدم متغير بيئة للأمان)
-const dbURI = process.env.DATABASE_URL || 'mongodb://localhost:27017/followersDB';
+// 1. الربط بقاعدة البيانات (MongoDB Atlas)
+// سيستخدم الرابط الذي وضعته في إعدادات Render باسم DATABASE_URL
+const dbURI = process.env.DATABASE_URL;
+
 mongoose.connect(dbURI)
-    .then(() => console.log("Connected to MongoDB Atlas"))
-    .catch(err => console.log(err));
+    .then(() => console.log("✅ متصل بنجاح بقاعدة بيانات MongoDB Atlas"))
+    .catch(err => console.error("❌ خطأ في الاتصال بقاعدة البيانات:", err));
 
-// مسار التحقق من المتابعة وإضافة النقاط
+// 2. مسار عرض الصفحة الرئيسية (حل مشكلة عدم ظهور الموقع)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// 3. مسار التحقق من المتابعة وإضافة النقاط
 app.post('/api/verify', async (req, res) => {
     const { userId, targetProfile, usernameToCheck } = req.body;
 
+    let browser;
     try {
-        const browser = await puppeteer.launch({
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        // تشغيل المتصفح بإعدادات تتوافق مع سيرفرات Render
+        browser = await puppeteer.launch({
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
         });
         const page = await browser.newPage();
-        await page.goto(`https://www.socialplatform.com/${targetProfile}`);
         
+        // التوجه لبروفايل الشخص
+        await page.goto(`https://www.socialplatform.com/${targetProfile}`, { 
+            waitUntil: 'networkidle2', 
+            timeout: 60000 
+        });
+
         const content = await page.content();
         const isFollowing = content.includes(usernameToCheck);
+        
         await browser.close();
 
         if (isFollowing) {
-            const user = await User.findByIdAndUpdate(userId, { $inc: { points: 10 } }, { new: true });
-            res.json({ success: true, newPoints: user.points });
+            // تحديث النقاط في قاعدة البيانات
+            const user = await User.findByIdAndUpdate(
+                userId, 
+                { $inc: { points: 10 } }, 
+                { new: true }
+            );
+            return res.json({ success: true, newPoints: user.points });
         } else {
-            res.json({ success: false, message: "لم نجد متابعة بعد" });
+            return res.json({ success: false, message: "لم نجد اسمك في قائمة المتابعين!" });
         }
+
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        if (browser) await browser.close();
+        console.error("خطأ أثناء الفحص:", err);
+        res.status(500).json({ success: false, message: "حدث خطأ فني أثناء التحقق" });
     }
 });
 
+// تشغيل السيرفر
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`🚀 السيرفر يعمل الآن على الرابط: http://localhost:${PORT}`);
+});
