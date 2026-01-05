@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Boost | كسب المتابعين</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #0f172a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    </style>
+</head>
+<body class="text-white min-h-screen">
+
+    <nav class="bg-gray-800 p-4 border-b border-gray-700 shadow-xl">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-blue-500">SocialBoost</h1>
+            <div class="bg-gray-900 px-6 py-2 rounded-full border border-yellow-500/50 flex items-center">
+                <span id="user-points" class="text-yellow-400 font-bold text-xl">10</span>
+                <i class="fas fa-coins text-yellow-500 mr-2"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-12 px-4">
+        <div class="text-center mb-10">
+            <h2 class="text-4xl font-extrabold mb-4">احصل على متابعين مجاناً</h2>
+            <p class="text-gray-400">تابع الحسابات أدناه وقم بتأكيد المهمة لتحصل على نقاطك فوراً.</p>
+        </div>
+
+        <div class="max-w-2xl mx-auto grid gap-6">
+            <div class="bg-gray-800 border border-gray-700 rounded-3xl p-6 flex justify-between items-center shadow-2xl">
+                <div class="flex items-center">
+                    <div class="w-14 h-14 bg-gradient-to-tr from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl font-bold">
+                        A
+                    </div>
+                    <div class="mr-4">
+                        <h3 class="text-lg font-bold">@ArkamLahlou</h3>
+                        <p class="text-sm text-green-400 font-medium">+10 نقاط</p>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <a href="https://instagram.com/arkamlahlou" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl text-center text-sm font-bold transition">متابعة</a>
+                    <button onclick="verifyTask(this, 'ArkamLahlou')" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-6 py-2 rounded-xl text-sm font-bold transition border border-gray-600">تأكيد</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // دالة التحقق
+        async function verifyTask(btn, targetAccount) {
+            const userId = "PLACEHOLDER_USER_ID"; // في نسخة الإنتاج سيتم جلب الـ ID الحقيقي
+            const usernameToCheck = "Your_Username"; // اسم المستخدم الذي سيقوم بالمتابعة
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الفحص...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: userId,
+                        targetProfile: targetAccount,
+                        usernameToCheck: usernameToCheck
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        title: 'أحسنت! 🎉',
+                        text: `تمت المتابعة بنجاح. رصيدك الجديد: ${data.newPoints}`,
+                        icon: 'success',
+                        background: '#1f2937',
+                        color: '#fff'
+                    });
+                    document.getElementById('user-points').innerText = data.newPoints;
+                    btn.innerHTML = '✅ تمت المهمة';
+                    btn.className = "bg-green-600 text-white px-6 py-2 rounded-xl text-sm font-bold opacity-50 cursor-not-allowed";
+                } else {
+                    Swal.fire({
+                        title: 'خطأ في التحقق',
+                        text: data.message,
+                        icon: 'warning',
+                        background: '#1f2937',
+                        color: '#fff'
+                    });
+                    btn.innerHTML = 'تأكيد';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                Swal.fire('خطأ!', 'تعذر الاتصال بالسيرفر حالياً', 'error');
+                btn.innerHTML = 'تأكيد';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
