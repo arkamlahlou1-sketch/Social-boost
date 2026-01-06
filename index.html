@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialBoost - Get Free Followers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type='text/javascript' src='//your-ad-network-link.js'></script>
+    <style>
+        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen bg-gradient-to-b from-slate-900 to-slate-800">
+
+    <div class="max-w-md mx-auto">
+        <div class="flex justify-between items-center mb-10">
+            <h1 class="text-3xl font-black bg-gradient-to-r from-blue-500 to-indigo-400 bg-clip-text text-transparent">SocialBoost</h1>
+            <div class="bg-yellow-500/10 border border-yellow-500/30 px-5 py-2 rounded-2xl text-yellow-500 font-bold shadow-lg">
+                💰 <span id="user-points">10</span> Points
+            </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-3xl shadow-2xl mb-8 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-2 bg-blue-600 text-[10px] font-bold uppercase tracking-widest rounded-bl-xl">Daily Task</div>
+            <h2 class="text-lg font-bold mb-6 flex items-center gap-2">🔥 Active Mission</h2>
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-600 to-pink-500 rounded-2xl flex items-center justify-center font-bold text-2xl shadow-lg shadow-purple-900/20">A</div>
+                    <div>
+                        <p class="font-bold text-base">ArkamLahlou@</p>
+                        <p class="text-green-400 text-xs font-medium">Reward: +10 Points</p>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <a href="https://instagram.com/arkamlahlou" target="_blank" onclick="startTimer()" class="bg-blue-600 hover:bg-blue-500 px-6 py-2.5 rounded-xl text-xs font-bold transition-all text-center shadow-lg shadow-blue-900/40">Follow</a>
+                    <button id="confirm-btn" onclick="confirmTask()" disabled class="bg-slate-700 opacity-50 cursor-not-allowed px-6 py-2.5 rounded-xl text-xs font-bold transition-all">
+                        Confirm (<span id="timer">30</span>s)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-indigo-600 to-blue-700 p-6 rounded-3xl shadow-xl mb-8">
+            <h3 class="font-bold text-xl mb-2 flex items-center gap-2">🎁 Free Bonuses!</h3>
+            <p class="text-blue-100 text-xs mb-5 opacity-90">Invite friends and earn 50 points for every new user who joins through your link.</p>
+            <div class="flex items-center gap-2 bg-black/20 p-2 rounded-2xl border border-white/10">
+                <button onclick="copyRefLink()" class="bg-white text-blue-700 px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-blue-50 transition-colors">Copy Link</button>
+                <input id="ref-link" type="text" readonly value="https://socialboost.onrender.com/?ref=user88" class="bg-transparent border-none text-white text-[11px] w-full focus:outline-none px-2">
+            </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-3xl shadow-xl mb-8">
+            <h3 class="font-bold text-lg mb-5 flex items-center gap-2">🏆 Top Champions</h3>
+            <div id="leaderboard-list" class="space-y-4">
+                <p class="text-gray-500 text-xs text-center animate-pulse">Fetching leaders...</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-4 text-center mt-10 border-t border-slate-800 pt-8">
+            <a href="/withdraw.html" class="inline-block bg-yellow-500/20 text-yellow-500 border border-yellow-500/20 px-8 py-3 rounded-2xl text-sm font-bold hover:bg-yellow-500 hover:text-white transition-all shadow-xl shadow-yellow-900/10">
+                🎁 Redeem Points for Followers
+            </a>
+            <p class="text-gray-600 text-[10px] uppercase tracking-[0.2em]">Secure Session • Verified by SocialBoost</p>
+        </div>
+    </div>
+
+    <script>
+        let timeLeft = 30;
+        let timerId;
+
+        // Ad Impression simulation on click
+        document.body.onclick = () => { console.log("Ad Pop-under triggered"); };
+
+        function startTimer() {
+            if (timerId) return;
+            const btn = document.getElementById('confirm-btn');
+            const timerDisplay = document.getElementById('timer');
+
+            timerId = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    btn.disabled = false;
+                    btn.classList.remove('bg-slate-700', 'opacity-50', 'cursor-not-allowed');
+                    btn.classList.add('bg-green-600', 'hover:bg-green-500', 'shadow-lg', 'shadow-green-900/30');
+                    btn.innerText = "Confirm Now ✅";
+                }
+            }, 1000);
+        }
+
+        async function loadLeaderboard() {
+            // Mock data - will be replaced by API call
+            const users = [
+                { name: "Global_User", pts: 4200 },
+                { name: "Rich_Follower", pts: 3100 },
+                { name: "Task_Master", pts: 2850 }
+            ];
+            const list = document.getElementById('leaderboard-list');
+            list.innerHTML = users.map((u, i) => `
+                <div class="flex justify-between items-center bg-white/5 p-3.5 rounded-2xl border border-white/5">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm">${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
+                        <span class="font-bold text-sm tracking-tight">${u.name}</span>
+                    </div>
+                    <span class="text-yellow-500 font-black text-sm">${u.pts} <small class="text-[9px]">PTS</small></span>
+                </div>
+            `).join('');
+        }
+
+        function copyRefLink() {
+            const linkInput = document.getElementById('ref-link');
+            linkInput.select();
+            document.execCommand('copy');
+            Swal.fire({
+                title: 'Link Copied!',
+                text: 'Share it to get 50 bonus points!',
+                icon: 'success',
+                background: '#1e293b',
+                color: '#fff',
+                confirmButtonColor: '#2563eb'
+            });
+        }
+
+        function confirmTask() {
+            Swal.fire({
+                title: 'Task Confirmed!',
+                text: '10 points have been added to your balance.',
+                icon: 'success',
+                background: '#1e293b',
+                color: '#fff'
+            });
+            // Update UI Balance
+            document.getElementById('user-points').innerText = "20";
+        }
+
+        loadLeaderboard();
+    </script>
+</body>
+</html>
