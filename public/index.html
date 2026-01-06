@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialBoost - Free Followers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .card { background: #1e293b; border: 1px solid #334155; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-md mx-auto">
+        
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-black text-blue-500">SocialBoost</h1>
+            <div class="bg-yellow-500/10 border border-yellow-500/20 px-4 py-1 rounded-full text-yellow-500 font-bold">
+                💰 <span id="user-points">10</span> Points
+            </div>
+        </div>
+
+        <div class="card p-6 rounded-3xl shadow-xl mb-6">
+            <h2 class="text-lg font-bold mb-4">New Task</h2>
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-xl">A</div>
+                    <div>
+                        <p class="font-bold text-sm">ArkamLahlou@</p>
+                        <p class="text-green-400 text-xs">+10 Points</p>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <a href="https://instagram.com/arkamlahlou" target="_blank" onclick="startTimer()" class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-xl text-xs font-bold transition text-center">Follow</a>
+                    <button id="confirm-btn" onclick="confirmTask()" disabled class="bg-slate-700 opacity-50 cursor-not-allowed px-6 py-2 rounded-xl text-xs font-bold transition">
+                        Confirm (<span id="timer">30</span>s)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 rounded-3xl shadow-xl mb-6">
+            <h3 class="font-bold text-lg mb-1">Invite Friends! 🎁</h3>
+            <p class="text-blue-100 text-xs mb-4">Get 50 points for every friend who joins.</p>
+            <div class="flex items-center gap-2 bg-white/10 p-2 rounded-xl border border-white/20">
+                <button onclick="copyRefLink()" class="bg-white text-blue-600 px-4 py-2 rounded-lg font-bold text-xs text-nowrap">Copy</button>
+                <input id="ref-link" type="text" readonly value="https://socialboost.onrender.com/?ref=user123" class="bg-transparent border-none text-white text-xs w-full">
+            </div>
+        </div>
+
+        <div class="card p-6 rounded-3xl shadow-xl mb-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2">🏆 Leaderboard</h3>
+            <div id="leaderboard-list" class="space-y-3">
+                <p class="text-gray-500 text-xs text-center">Loading champions...</p>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="/withdraw.html" class="text-gray-400 hover:text-white text-sm font-medium underline">Redeem points for followers</a>
+        </div>
+
+    </div>
+
+    <script>
+        let timeLeft = 30;
+        let timerId;
+
+        function startTimer() {
+            if (timerId) return;
+            const btn = document.getElementById('confirm-btn');
+            const timerDisplay = document.getElementById('timer');
+
+            timerId = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    btn.disabled = false;
+                    btn.classList.remove('bg-slate-700', 'opacity-50', 'cursor-not-allowed');
+                    btn.classList.add('bg-green-600', 'hover:bg-green-500');
+                    btn.innerText = "Confirm Now ✅";
+                }
+            }, 1000);
+        }
+
+        function copyRefLink() {
+            const linkInput = document.getElementById('ref-link');
+            linkInput.select();
+            document.execCommand('copy');
+            Swal.fire('Copied!', 'Share this link to earn points', 'success');
+        }
+
+        async function confirmTask() {
+            Swal.fire('Success!', '10 Points added to your account.', 'success');
+            // Logic to update database via /api/add-points
+        }
+    </script>
+</body>
+</html>
