@@ -1,100 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SocialBoost - Free Followers</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        body { background-color: #0f172a; color: white; font-family: 'Cairo', sans-serif; }
         .card { background: #1e293b; border: 1px solid #334155; }
+        .modal-bg { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(5px); }
     </style>
 </head>
 <body class="p-4 md:p-8">
+
+    <div id="auth-modal" class="fixed inset-0 modal-bg flex items-center justify-center z-50 hidden">
+        <div class="card p-8 rounded-3xl w-full max-w-sm text-center border-blue-500/30">
+            <h2 class="text-2xl font-black mb-4 text-blue-500">مرحباً بك!</h2>
+            <p class="text-gray-400 text-sm mb-6">أدخل اسم مستخدم لبدء جمع المتابعين</p>
+            <input id="username-input" type="text" placeholder="اسم المستخدم" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl mb-4 outline-none focus:border-blue-500 text-center">
+            <button onclick="registerUser()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold transition">دخول الآن</button>
+        </div>
+    </div>
+
     <div class="max-w-md mx-auto">
         
         <div class="flex justify-between items-center mb-8">
-            <h1 class="text-2xl font-black text-blue-500">SocialBoost</h1>
+            <h1 class="text-2xl font-black text-blue-500 italic">SOCIALBOOST</h1>
             <div class="bg-yellow-500/10 border border-yellow-500/20 px-4 py-1 rounded-full text-yellow-500 font-bold">
-                💰 <span id="user-points">10</span> Points
+                💰 <span id="user-points text-xl">0</span>
             </div>
         </div>
 
-        <div class="card p-6 rounded-3xl shadow-xl mb-6">
-            <h2 class="text-lg font-bold mb-4">New Task</h2>
-            <div class="flex items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-gradient-to-tr from-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-xl">A</div>
-                    <div>
-                        <p class="font-bold text-sm">ArkamLahlou@</p>
-                        <p class="text-green-400 text-xs">+10 Points</p>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <a href="https://instagram.com/arkamlahlou" target="_blank" onclick="startTimer()" class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-xl text-xs font-bold transition text-center">Follow</a>
-                    <button id="confirm-btn" onclick="confirmTask()" disabled class="bg-slate-700 opacity-50 cursor-not-allowed px-6 py-2 rounded-xl text-xs font-bold transition">
-                        Confirm (<span id="timer">30</span>s)
-                    </button>
-                </div>
-            </div>
+        <div id="tasks-container">
+            <p class="text-gray-500 text-center py-10">جاري البحث عن مهام متاحة...</p>
         </div>
 
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 rounded-3xl shadow-xl mb-6">
-            <h3 class="font-bold text-lg mb-1">Invite Friends! 🎁</h3>
-            <p class="text-blue-100 text-xs mb-4">Get 50 points for every friend who joins.</p>
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 rounded-3xl shadow-xl mb-6 mt-6">
+            <h3 class="font-bold text-lg mb-1">🎁 هدايا مجانية!</h3>
+            <p class="text-blue-100 text-xs mb-4">انسخ رابطك وانشره لتربح 50 نقطة عن كل صديق.</p>
             <div class="flex items-center gap-2 bg-white/10 p-2 rounded-xl border border-white/20">
-                <button onclick="copyRefLink()" class="bg-white text-blue-600 px-4 py-2 rounded-lg font-bold text-xs text-nowrap">Copy</button>
-                <input id="ref-link" type="text" readonly value="https://socialboost.onrender.com/?ref=user123" class="bg-transparent border-none text-white text-xs w-full">
+                <button onclick="copyRefLink()" class="bg-white text-blue-600 px-4 py-2 rounded-lg font-bold text-xs">نسخ</button>
+                <input id="ref-link" type="text" readonly value="https://rosroys-jpg.github.io/?ref=user" class="bg-transparent border-none text-white text-xs w-full outline-none">
             </div>
         </div>
 
         <div class="card p-6 rounded-3xl shadow-xl mb-6">
-            <h3 class="font-bold mb-4 flex items-center gap-2">🏆 Leaderboard</h3>
+            <h3 class="font-bold mb-4 flex items-center gap-2 text-blue-400">🏆 المتصدرون</h3>
             <div id="leaderboard-list" class="space-y-3">
-                <p class="text-gray-500 text-xs text-center">Loading champions...</p>
+                <div class="flex justify-between text-xs text-gray-400">
+                    <span>قريباً.. كن أنت الأول!</span>
+                </div>
             </div>
         </div>
 
-        <div class="text-center">
-            <a href="/withdraw.html" class="text-gray-400 hover:text-white text-sm font-medium underline">Redeem points for followers</a>
+        <div class="text-center pb-10">
+            <a href="#" onclick="Swal.fire('قريباً', 'سيتم تفعيل متجر المتابعين فور وصولك لـ 500 نقطة', 'info')" class="text-blue-400 hover:text-white text-sm font-medium underline">تحويل النقاط إلى متابعين</a>
         </div>
-
     </div>
 
     <script>
-        let timeLeft = 30;
+        const API_URL = "https://social-boost-production.up.railway.app/api";
+        let currentUser = JSON.parse(localStorage.getItem('sb_user')) || null;
         let timerId;
 
-        function startTimer() {
-            if (timerId) return;
-            const btn = document.getElementById('confirm-btn');
-            const timerDisplay = document.getElementById('timer');
+        // 1. نظام التسجيل
+        async function registerUser() {
+            const username = document.getElementById('username-input').value;
+            if(!username) return Swal.fire('خطأ', 'يرجى كتابة اسم المستخدم', 'error');
+
+            try {
+                const res = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username, email: username + "@social.com" })
+                });
+                const user = await res.json();
+                localStorage.setItem('sb_user', JSON.stringify(user));
+                location.reload();
+            } catch (e) {
+                Swal.fire('خطأ', 'الخادم لا يستجيب، تأكد من تشغيل Railway', 'error');
+            }
+        }
+
+        // 2. تحديث البيانات
+        async function init() {
+            if(!currentUser) {
+                document.getElementById('auth-modal').classList.remove('hidden');
+                return;
+            }
+
+            // تحديث الرصيد
+            const userRes = await fetch(`${API_URL}/user/${currentUser.id}`);
+            const userData = await userRes.json();
+            document.getElementById('user-points').innerText = userData.points_balance;
+            document.getElementById('ref-link').value = `https://rosroys-jpg.github.io/?ref=${userData.username}`;
+
+            loadTasks();
+        }
+
+        // 3. تحميل المهام من الخادم
+        async function loadTasks() {
+            const container = document.getElementById('tasks-container');
+            const res = await fetch(`${API_URL}/tasks/${currentUser.id}`);
+            const tasks = await res.json();
+
+            if(tasks.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-10">لا توجد مهام حالياً، أضف حملتك الأولى!</p>';
+                return;
+            }
+
+            container.innerHTML = tasks.map(task => `
+                <div class="card p-6 rounded-3xl shadow-xl mb-4">
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-full flex items-center justify-center font-bold text-xl uppercase">${task.target_link.charAt(0)}</div>
+                            <div>
+                                <p class="font-bold text-sm truncate w-24">${task.target_link}</p>
+                                <p class="text-green-400 text-xs">+${task.points_per_follow} نقطة</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <a href="${task.target_link}" target="_blank" onclick="startTimer(${task.id})" class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-xl text-xs font-bold transition text-center">متابعة</a>
+                            <button id="btn-${task.id}" disabled class="bg-slate-700 opacity-50 px-6 py-2 rounded-xl text-xs font-bold">تأكيد (30s)</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function startTimer(taskId) {
+            let time = 30;
+            const btn = document.getElementById(`btn-${taskId}`);
+            if (timerId) clearInterval(timerId);
 
             timerId = setInterval(() => {
-                timeLeft--;
-                timerDisplay.innerText = timeLeft;
-                if (timeLeft <= 0) {
+                time--;
+                btn.innerText = `تأكيد (${time}s)`;
+                if (time <= 0) {
                     clearInterval(timerId);
                     btn.disabled = false;
-                    btn.classList.remove('bg-slate-700', 'opacity-50', 'cursor-not-allowed');
-                    btn.classList.add('bg-green-600', 'hover:bg-green-500');
-                    btn.innerText = "Confirm Now ✅";
+                    btn.className = "bg-green-600 hover:bg-green-500 px-6 py-2 rounded-xl text-xs font-bold transition";
+                    btn.innerText = "تحقق الآن ✅";
+                    btn.onclick = () => confirmTask(taskId);
                 }
             }, 1000);
+        }
+
+        async function confirmTask(taskId) {
+            const res = await fetch(`${API_URL}/tasks/verify`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ userId: currentUser.id, taskId: taskId })
+            });
+            const result = await res.json();
+            if(result.success) {
+                Swal.fire('مبروك!', `تمت إضافة ${result.new_points} نقطة`, 'success').then(() => location.reload());
+            } else {
+                Swal.fire('تنبيه', result.error, 'warning');
+            }
         }
 
         function copyRefLink() {
             const linkInput = document.getElementById('ref-link');
             linkInput.select();
             document.execCommand('copy');
-            Swal.fire('Copied!', 'Share this link to earn points', 'success');
+            Swal.fire('تم النسخ!', 'شارك الرابط مع أصدقائك لتربح', 'success');
         }
 
-        async function confirmTask() {
-            Swal.fire('Success!', '10 Points added to your account.', 'success');
-            // Logic to update database via /api/add-points
-        }
+        window.onload = init;
     </script>
 </body>
 </html>
