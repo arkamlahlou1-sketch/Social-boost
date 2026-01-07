@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    points_balance INTEGER DEFAULT 10,
+    used_codes TEXT[] DEFAULT '{}',
+    social_id VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-const userSchema = new mongoose.Schema({
-    username: { type: String, required: true },
-    points: { type: Number, default: 0 },
-    usedCodes: [String],
-    socialId: String
-});
-
-module.exports = mongoose.model('User', userSchema);
