@@ -1,0 +1,8 @@
+body { font-family: Arial, sans-serif; margin: 20px; background: #f0f2f5; }
+header h1 { text-align: center; color: #4f46e5; }
+#userBalance { font-weight: bold; color: green; }
+section { margin-top: 30px; }
+#tasksList, #packagesList { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+.task-card, .package-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+button { padding: 10px 20px; border: none; border-radius: 10px; background: #4f46e5; color: white; cursor: pointer; margin-top: 10px; }
+button:disabled { background: gray; cursor: not-allowed; }
