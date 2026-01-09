@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Boost - باقات النقاط</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Social Boost</h1>
+  <p>رصيدك الحالي: <span id="userBalance">0</span> نقطة</p>
+</header>
+
+<section id="tasksSection">
+  <h2>المهام المتاحة</h2>
+  <div id="tasksList">
+    <p style="text-align:center;color:gray;">جارٍ تحميل المهام...</p>
+  </div>
+  <button id="confirmTask" onclick="confirmTask()" disabled>انتظر...</button>
+</section>
+
+<section id="packagesSection">
+  <h2>شراء باقات النقاط</h2>
+  <div id="packagesList">
+    <div class="package-card">
+      <h3>50 نقطة</h3>
+      <p>السعر: 5$</p>
+      <button onclick="buyPackage(50)">شراء</button>
+    </div>
+    <div class="package-card">
+      <h3>120 نقطة</h3>
+      <p>السعر: 10$</p>
+      <button onclick="buyPackage(120)">شراء</button>
+    </div>
+    <div class="package-card">
+      <h3>250 نقطة</h3>
+      <p>السعر: 20$</p>
+      <button onclick="buyPackage(250)">شراء</button>
+    </div>
+  </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
